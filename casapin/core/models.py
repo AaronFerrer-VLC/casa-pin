@@ -75,3 +75,46 @@ class LugarInteres(models.Model):
 
     def __str__(self):
         return self.nombre
+
+
+
+class Reserva(models.Model):
+        nombre = models.CharField(max_length=100)
+        fecha_inicio = models.DateField()
+        fecha_fin = models.DateField()
+        ESTADO_CHOICES = [
+            ('reservado', 'Reservado'),
+            ('disponible', 'Disponible'),
+            ('mantenimiento', 'Mantenimiento'),
+        ]
+        estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='reservado')
+        notas = models.TextField(blank=True)
+
+        def __str__(self):
+            return f"{self.nombre} ({self.fecha_inicio} → {self.fecha_fin})"
+
+class Movimiento(models.Model):
+    TIPO_CHOICES = [
+        ('ingreso', 'Ingreso'),
+        ('gasto', 'Gasto'),
+    ]
+
+    fecha = models.DateField()
+    tipo = models.CharField(max_length=10, choices=TIPO_CHOICES)
+    concepto = models.CharField(max_length=255)
+    categoria = models.CharField(max_length=50, blank=True)
+    importe = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.get_tipo_display()} – {self.concepto} ({self.fecha})"
+
+    class Meta:
+        ordering = ['-fecha']
+
+
+
+class DashboardFinanciero(models.Model):
+    class Meta:
+        verbose_name = "📊 Dashboard financiero"
+        verbose_name_plural = "📊 Dashboard financiero"
+        managed = False  # Django no creará tabla en la base de datos

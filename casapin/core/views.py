@@ -1,10 +1,19 @@
+from django.db.models import Sum
 from django.shortcuts import render
+from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q
 from .models import Restaurante
 from .models import Playa
 from .models import Actividad
 from .models import ImagenGaleria
 from .models import LugarInteres
+from .models import Movimiento
+from datetime import date
+from calendar import month_name
+from collections import OrderedDict
+from django.utils.text import slugify
+from django.http import JsonResponse
+from .models import Reserva
 
 def home(request):
     return render(request, 'core/home.html')
@@ -77,3 +86,66 @@ def lista_playas(request):
 def lista_actividades(request):
     actividades = Actividad.objects.all()
     return render(request, 'core/actividades.html', {'actividades': actividades})
+
+
+@staff_member_required
+def dashboard_financiero(request):
+    hoy = date.today()
+    año_actual = hoy.year
+
+    movimientos = Movimiento.objects.filter(fecha__year=año_actual)
+
+    ingresos = movimientos.filter(tipo='ingreso').aggregate(total=Sum('importe'))['total'] or 0
+    gastos = movimientos.filter(tipo='gasto').aggregate(total=Sum('importe'))['total'] or 0
+    balance = ingresos - gastos
+
+    # Crear balance mensual
+    meses = OrderedDict((month_name[i], 0) for i in range(1, 13))
+
+    for mov in movimientos:
+        nombre_mes = month_name[mov.fecha.month]
+        if mov.tipo == 'ingreso':
+            meses[nombre_mes] += mov.importe
+        else:
+            meses[nombre_mes] -= mov.importe
+
+    contexto = {
+        'ingresos': ingresos,
+        'gastos': gastos,
+        'balance': balance,
+        'meses': {
+            'keys': list(meses.keys()),
+            'values': list(meses.values())
+        },
+        'año': año_actual,
+    }
+
+    return render(request, 'core/dashboard.html', contexto)
+
+
+def eventos_reservas(request):
+    reservas = Reserva.objects.all()
+    eventos = []
+
+    for r in reservas:
+        eventos.append({
+            "title": r.nombre,
+            "start": r.fecha_inicio.isoformat(),
+            "end": r.fecha_fin.isoformat(),
+            "color": color_por_estado(r.estado)
+        })
+
+    return JsonResponse(eventos, safe=False)
+
+
+def color_por_estado(estado):
+    colores = {
+        'reservado': '#f44336',  # rojo
+        'disponible': '#4caf50',  # verde
+        'mantenimiento': '#ff9800',  # naranja
+    }
+    return colores.get(estado, '#9e9e9e')
+
+@staff_member_required
+def vista_calendario(request):
+    return render(request, 'core/calendario.html')

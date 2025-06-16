@@ -1,0 +1,46 @@
+<!-- dashboard.html -->
+<h1>📊 Dashboard financiero – {{ año }}</h1>
+
+<ul>
+  <li><strong>Total ingresos:</strong> {{ ingresos }} €</li>
+  <li><strong>Total gastos:</strong> {{ gastos }} €</li>
+  <li><strong>Balance neto:</strong> {{ balance }} €</li>
+</ul>
+<h2>📅 Balance mensual</h2>
+<table border="1" cellpadding="8" cellspacing="0">
+  <tr>
+    <th>Mes</th>
+    <th>Balance (€)</th>
+  </tr>
+  {% for mes, valor in meses.items %}
+  <tr>
+    <td>{{ mes }}</td>
+    <td>{{ valor|floatformat:2 }}</td>
+  </tr>
+  {% endfor %}
+</table>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<canvas id="balanceChart" width="400" height="150"></canvas>
+
+<script>
+  const ctx = document.getElementById('balanceChart').getContext('2d');
+  const balanceChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ meses.keys|safe }},
+      datasets: [{
+        label: 'Balance mensual (€)',
+        data: {{ meses.values|safe }},
+        backgroundColor: '#4CAF50',
+        borderColor: '#388E3C',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+</script>
