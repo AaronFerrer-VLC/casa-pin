@@ -1,0 +1,41 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Inicio - Casa Pin{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <!-- Imagen destacada -->
+    <div class="text-center">
+        <img src="{% static 'images/casa_pin_destacada.jpg' %}" class="img-fluid rounded shadow" alt="Casa Pin">
+    </div>
+
+    <!-- Bienvenida -->
+    <div class="text-center mt-4">
+        <h2>Bienvenidos a Casa Pin</h2>
+        <p>Un refugio encantador en el corazón de Asturias, ideal para desconectar y disfrutar de la naturaleza.</p>
+        <a href="https://www.booking.com/hotel/es/vivienda-vacacional-casa-pin.es.html" class="btn btn-primary btn-lg mt-3" target="_blank">Reservar Ahora</a>
+    </div>
+
+    <!-- Secciones destacadas -->
+    <div class="row mt-5 text-center">
+        <div class="col-md-4">
+            <h4>📖 Nuestra Historia</h4>
+            <p>Descubre el origen de Casa Pin y el legado de nuestra familia.</p>
+            <a href="{% url 'historia' %}" class="btn btn-outline-primary">Leer más</a>
+        </div>
+        <div class="col-md-4">
+            <h4>📸 Galería</h4>
+            <p>Explora imágenes de la casa y su hermoso entorno.</p>
+            <a href="{% url 'galeria' %}" class="btn btn-outline-primary">Ver fotos</a>
+        </div>
+        <div class="col-md-4">
+            <h4>🗺️ Localización</h4>
+            <p>¿Dónde nos encontramos?</p>
+            <a href="{% url 'entorno' %}" class="btn btn-outline-primary">Descubrir más</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+

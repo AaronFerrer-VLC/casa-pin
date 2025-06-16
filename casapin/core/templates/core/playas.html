@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+{% block title %}Playas – Casa Pin{% endblock %}
+
+{% block content %}
+<h2 class="text-center mb-4">🏖️ Playas cercanas</h2>
+<div class="row">
+  {% for playa in playas %}
+  <div class="col-md-6 playa">
+    {% if playa.imagen %}
+      <img src="{{ playa.imagen.url }}" alt="{{ playa.nombre }}">
+    {% endif %}
+    <h4>{{ playa.nombre }}</h4>
+    <p>📍 {{ playa.ubicacion }}</p>
+    {% if playa.valoracion %}<p>⭐ {{ playa.valoracion }}/5</p>{% endif %}
+    {% if playa.enlace %}<p>🌐 <a href="{{ playa.enlace }}" target="_blank">Más info</a></p>{% endif %}
+    <p>{{ playa.descripcion }}</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
+

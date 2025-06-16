@@ -1,0 +1,70 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% load format_filters %}
+{% block title %}Entorno - Casa Pin{% endblock %}
+{% block content %}
+
+<h2 class="text-center mt-4">🗺️ Lugares cerca de Casa Pin</h2>
+<p class="text-center">Filtra por tipo de lugar:</p>
+
+<div class="text-center mb-3">
+    <a href="{% url 'entorno' %}" class="btn {% if not categoria_activa %}btn-primary{% else %}btn-outline-primary{% endif %}">Todos</a>
+    {% for cat in categorias %}
+    <a href="?categoria={{ cat }}" class="btn {% if categoria_activa == cat %}btn-primary{% else %}btn-outline-primary{% endif %}">
+        {{ cat|capfirst }}
+    </a>
+    {% endfor %}
+</div>
+
+<div id="map" style="height: 500px;" class="my-4 shadow rounded"></div>
+
+
+<!-- Leaflet.js -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+  console.log("Casa Pin coords:", {{ casa_pin.latitud|default:"null" }}, {{ casa_pin.longitud|default:"null" }})
+
+const mapa = L.map('map').setView([
+  parseFloat("{{ casa_pin.latitud|default_if_none:'43.36151'|as_float }}"),
+  parseFloat("{{ casa_pin.longitud|default_if_none:'-4.54909'|as_float }}")
+], 14);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(mapa);
+
+{% for lugar in lugares %}
+  console.log("Lugar:", "{{ lugar.nombre }}", parseFloat("{{ lugar.latitud|as_float }}"), parseFloat("{{ lugar.longitud|as_float }}"));
+
+  {% if lugar.es_casa_pin %}
+    const iconCasa = L.icon({
+      iconUrl: "{% static 'images/pin-casa-pin.png' %}",
+      iconSize: [32, 32],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32]
+    });
+
+    const pin = L.marker([
+      parseFloat("{{ lugar.latitud|as_float }}"),
+      parseFloat("{{ lugar.longitud|as_float }}")
+    ], { icon: iconCasa })
+      .addTo(mapa)
+      .bindPopup("<strong>{{ lugar.nombre }}</strong><br>¡Aquí estamos!");
+
+    pin.openPopup();
+  {% else %}
+    L.marker([
+      parseFloat("{{ lugar.latitud|as_float }}"),
+      parseFloat("{{ lugar.longitud|as_float }}")
+    ])
+      .addTo(mapa)
+      .bindPopup("<strong>{{ lugar.nombre }}</strong><br>{{ lugar.descripcion|default:'Sin descripción' }}");
+  {% endif %}
+{% endfor %}
+
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+{% block title %}Ocio y Actividades – Casa Pin{% endblock %}
+
+{% block content %}
+<h2 class="text-center mb-4">🎭 Actividades y Ocio</h2>
+<div class="row">
+  {% for actividad in actividades %}
+  <div class="col-md-6 actividad">
+    {% if actividad.imagen %}
+      <img src="{{ actividad.imagen.url }}" alt="{{ actividad.nombre }}">
+    {% endif %}
+    <h4>{{ actividad.nombre }}</h4>
+    <p>📌 {{ actividad.categoria }} | 📍 {{ actividad.ubicacion }}</p>
+    {% if actividad.enlace %}<p>🌐 <a href="{{ actividad.enlace }}" target="_blank">Más info</a></p>{% endif %}
+    <p>{{ actividad.descripcion }}</p>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

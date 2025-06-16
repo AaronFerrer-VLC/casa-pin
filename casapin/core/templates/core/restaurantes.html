@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %}
+{% block title %}Restaurantes – Casa Pin{% endblock %}
+
+{% block content %}
+<h2 class="text-center mb-4">🍽️ Restaurantes recomendados</h2>
+<div class="row">
+  {% for restaurante in restaurantes %}
+  <div class="col-md-6 restaurante">
+    {% if restaurante.imagen %}
+      <img src="{{ restaurante.imagen.url }}" alt="{{ restaurante.nombre }}">
+    {% endif %}
+    <h4>{{ restaurante.nombre }}</h4>
+    <p>📍 {{ restaurante.ubicacion }}</p>
+    <p>⭐ {{ restaurante.valoracion }}/5</p>
+    {% if restaurante.enlace %}
+      <p>🌐 <a href="{{ restaurante.enlace }}" target="_blank">Más información</a></p>
+    {% endif %}
+    <p>{{ restaurante.descripcion }}</p>
+  </div>
+  {% empty %}
+    <p>No hay restaurantes disponibles aún.</p>
+  {% endfor %}
+</div>
+{% endblock %}
+

@@ -1,0 +1,53 @@
+{% extends 'core/base.html' %}
+{% block title %}Galería - Casa Pin{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">📸 Galería de Casa Pin</h2>
+
+    {% if imagenes %}
+    <!-- Carrusel (primeras 3 imágenes) -->
+    <div id="galeriaCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for img in imagenes|slice:":3" %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ img.imagen.url }}" class="d-block w-100" alt="{{ img.titulo }}">
+            </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#galeriaCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#galeriaCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+
+    <!-- Filtros por categoría -->
+    <div class="mb-3 text-center">
+        <a href="{% url 'galeria' %}" class="btn {% if not categoria_actual %}btn-primary{% else %}btn-outline-primary{% endif %}">Todas</a>
+        <a href="?categoria=interior" class="btn {% if categoria_actual == 'interior' %}btn-primary{% else %}btn-outline-primary{% endif %}">Interior</a>
+        <a href="?categoria=exterior" class="btn {% if categoria_actual == 'exterior' %}btn-primary{% else %}btn-outline-primary{% endif %}">Exterior</a>
+        <a href="?categoria=naturaleza" class="btn {% if categoria_actual == 'naturaleza' %}btn-primary{% else %}btn-outline-primary{% endif %}">Naturaleza</a>
+    </div>
+
+    <!-- Mosaico de imágenes -->
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+        {% for img in imagenes %}
+        <div class="col">
+            <div class="card shadow-sm">
+                <img src="{{ img.imagen.url }}" class="card-img-top" alt="{{ img.titulo }}">
+                {% if img.titulo %}
+                <div class="card-body">
+                    <p class="card-text">{{ img.titulo }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+        <p class="text-center">No hay imágenes aún.</p>
+    {% endif %}
+</div>
+{% endblock %}
