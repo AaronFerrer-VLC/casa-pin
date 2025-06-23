@@ -1,0 +1,102 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Solicitud de Reserva - Casa Pin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Solicita tu estancia</h2>
+    <p class="text-center">Déjanos tus datos y fechas. Te responderemos muy pronto.</p>
+
+    <form id="form-solicitud" class="shadow p-4 rounded">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input type="text" name="nombre" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Teléfono</label>
+            <input type="text" name="telefono" class="form-control" required>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Fecha de entrada</label>
+                <input type="date" name="checkin" class="form-control" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Fecha de salida</label>
+                <input type="date" name="checkout" class="form-control" required>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Comentarios</label>
+            <textarea name="mensaje" class="form-control" rows="4" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Enviar Solicitud</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Toast -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+  <div id="toastSolicitud" class="toast align-items-center text-white bg-success border-0" role="alert">
+    <div class="d-flex">
+      <div class="toast-body">
+        ¡Tu solicitud fue enviada correctamente!
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("form-solicitud");
+
+    form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const datos = {
+            nombre: form.nombre.value,
+            email: form.email.value,
+            telefono: form.telefono.value,
+            checkin: form.checkin.value,
+            checkout: form.checkout.value,
+            mensaje: form.mensaje.value
+        };
+
+        fetch("/api/solicitud/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify(datos)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.ok) {
+                const toast = new bootstrap.Toast(document.getElementById("toastSolicitud"));
+                toast.show();
+                form.reset();
+            } else {
+                alert(data.error || "Algo salió mal.");
+            }
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            alert("Hubo un problema al enviar la solicitud.");
+        });
+    });
+});
+</script>
+{% endblock %}

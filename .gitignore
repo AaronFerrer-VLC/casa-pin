@@ -1,10 +1,29 @@
-*.pyc
+# Python
+*.py[cod]
 __pycache__/
+*.so
+
+# Entornos virtuales
+venv/
+.venv/
+
+# Archivos de base de datos
 *.sqlite3
 db.sqlite3
+
+# Archivos sensibles
 .env
 *.log
+
+# Archivos temporales o personales
+.DS_Store
+Thumbs.db
+
+# Archivos de medios y estáticos generados
 media/
 staticfiles/
+
+# Config de editores
 .vscode/
-.venv/
+.idea/
+

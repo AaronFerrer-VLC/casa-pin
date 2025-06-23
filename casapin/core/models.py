@@ -79,19 +79,25 @@ class LugarInteres(models.Model):
 
 
 class Reserva(models.Model):
-        nombre = models.CharField(max_length=100)
-        fecha_inicio = models.DateField()
-        fecha_fin = models.DateField()
-        ESTADO_CHOICES = [
-            ('reservado', 'Reservado'),
-            ('disponible', 'Disponible'),
-            ('mantenimiento', 'Mantenimiento'),
-        ]
-        estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='reservado')
-        notas = models.TextField(blank=True)
+    nombre = models.CharField(max_length=100)
+    email = models.EmailField(null=True, blank=True)
+    telefono = models.CharField(max_length=30, null=True, blank=True)
+    mensaje = models.TextField(blank=True, null=True)
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField()
 
-        def __str__(self):
-            return f"{self.nombre} ({self.fecha_inicio} → {self.fecha_fin})"
+    ESTADO_CHOICES = [
+        ('reservado', 'Reservado'),
+        ('disponible', 'Disponible'),
+        ('mantenimiento', 'Mantenimiento'),
+        ('pendiente', 'Pendiente'),  # ya que lo usas como default
+    ]
+    estado = models.CharField(max_length=20, choices=ESTADO_CHOICES, default='pendiente')
+    notas = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.nombre} ({self.fecha_inicio} → {self.fecha_fin})"
+
 
 class Movimiento(models.Model):
     TIPO_CHOICES = [
@@ -118,3 +124,12 @@ class DashboardFinanciero(models.Model):
         verbose_name = "📊 Dashboard financiero"
         verbose_name_plural = "📊 Dashboard financiero"
         managed = False  # Django no creará tabla en la base de datos
+
+
+class Tarifa(models.Model):
+    fecha = models.DateField()
+    precio = models.DecimalField(max_digits=8, decimal_places=2)
+    motivo = models.CharField(max_length=100, blank=True)  # p. ej. "Semana Santa", "promo"
+
+    def __str__(self):
+        return f"{self.fecha} → {self.precio} € ({self.motivo})"

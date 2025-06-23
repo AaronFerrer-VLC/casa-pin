@@ -1,17 +1,1 @@
-{% extends "admin/base.html" %}
 
-{% block title %}Casa Pin Admin{% endblock %}
-
-{% block branding %}
-  <h1 id="site-name">
-    <a href="{% url 'admin:index' %}">Casa Pin – Panel</a>
-  </h1>
-{% endblock %}
-
-{% block nav-global %}
-  <div style="padding: 10px;">
-    <a href="{% url 'dashboard' %}" target="_blank" style="font-weight: bold; color: #2c7;">
-      📊 Ir al dashboard financiero
-    </a>
-  </div>
-{% endblock %}

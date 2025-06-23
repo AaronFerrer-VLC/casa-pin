@@ -34,6 +34,7 @@
                         </ul>
                     </li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'contacto' %}">Contacto</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'solicitud_reserva' %}">Solicitud</a></li>
                     <li class="nav-item"><a class="nav-link btn btn-light" href="https://www.booking.com/hotel/es/vivienda-vacacional-casa-pin.es.html" target="_blank">Reservar</a></li>
                 </ul>
             </div>
@@ -54,5 +55,44 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% block scripts %}
+    <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("form-contacto");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const datos = {
+        nombre: form.nombre.value,
+        email: form.email.value,
+        mensaje: form.mensaje.value
+      };
+
+      fetch("/api/enviar-contacto/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify(datos)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.ok) {
+          alert("¡Mensaje enviado! Gracias por escribirnos.");
+          form.reset();
+        } else {
+          alert("Error al enviar. Por favor, inténtalo de nuevo.");
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert("Hubo un problema al enviar el mensaje.");
+      });
+    });
+  });
+</script>
+    {% endblock %}
 </body>
 </html>
