@@ -5,7 +5,7 @@ app = "casapin"
 
 [env]
   PORT = "8000"
-  FLY_REGION = "mad"
+  FLY_REGION = "par"
 
 [deploy]
   strategy = "rolling"
