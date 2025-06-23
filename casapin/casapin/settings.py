@@ -157,3 +157,4 @@ JAZZMIN_SETTINGS = {
 # ✔️ Primary key por defecto
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# Despliegue inicial desde GitHub Actions
