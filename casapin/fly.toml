@@ -2,8 +2,6 @@ app = "casapin"
 
 [build]
   dockerfile = "./Dockerfile"
-
-
 [env]
   PORT = "8000"
   FLY_REGION = "par"
