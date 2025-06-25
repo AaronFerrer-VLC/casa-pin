@@ -28,12 +28,6 @@ SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ["casapin.fly.dev", "127.0.0.1", "localhost"]
-
-
 # Application definition
 
 INSTALLED_APPS = [
