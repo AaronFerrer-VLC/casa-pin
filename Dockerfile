@@ -6,12 +6,13 @@ ENV PYTHONPATH=/app
 
 WORKDIR /app
 
-COPY casapin/requirements.txt ./requirements.txt
+COPY requirements.txt ./requirements.txt
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . /app
 
 CMD ["gunicorn", "casapin.wsgi:application", "--bind", "0.0.0.0:8000"]
+
 
 
 
