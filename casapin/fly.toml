@@ -2,13 +2,14 @@ app = "casapin"
 
 [build]
   dockerfile = "./Dockerfile"
+
 [env]
   PORT = "8000"
   FLY_REGION = "par"
 
 [deploy]
   strategy = "rolling"
-release_command = "python casapin/manage.py migrate"
+  release_command = "python manage.py migrate"
   release_command_timeout_secs = 300
   wait_timeout_secs = 300
 
@@ -27,5 +28,6 @@ release_command = "python casapin/manage.py migrate"
   [[services.ports]]
     handlers = ["tls", "http"]
     port = 443
+
 
 
